@@ -9,5 +9,6 @@ namespace TronchaToro.Service.Helpers
     public interface ITokenHelper
     {
         string CrearToken(LoginRequest request);
+        string cifrarMD5(string password);
     }
 }

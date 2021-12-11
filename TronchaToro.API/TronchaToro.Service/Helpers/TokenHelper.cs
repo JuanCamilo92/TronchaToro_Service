@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using TronchaToro.Service.Models.Requests;
@@ -19,41 +20,64 @@ namespace TronchaToro.Service.Helpers
         {
             _configuration = configuration;
         }
-        public string CrearToken(LoginRequest request) //List<string> roles
+        public object CrearToken(LoginRequest request) //List<string> roles
         {
             try
             {
                 //CLAIMS
                 var claims = new List<Claim> {
-                    new Claim(JwtRegisteredClaimNames.NameId, request.Identificacion)
+                    new Claim(JwtRegisteredClaimNames.NameId, request.Identificacion),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
-                //if (roles != null)
-                //{
-                //    foreach (var rol in roles)
-                //        claims.Add(new Claim(ClaimTypes.Role, rol));
-                //}
+                SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+                SigningCredentials credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
-                var credenciales = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-                var tokenDescriptcion = new SecurityTokenDescriptor
+                SecurityTokenDescriptor tokenDescriptcion = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(claims),
                     Expires = DateTime.Now.AddDays(30),
-                    SigningCredentials = credenciales
+                    SigningCredentials = credentials
                 };
 
-                var tokenManejador = new JwtSecurityTokenHandler();
-                var token = tokenManejador.CreateToken(tokenDescriptcion);
-                var tokenFinal = tokenManejador.WriteToken(token);
+                JwtSecurityToken tokenManejador = new JwtSecurityToken(
+                    _configuration["Tokens:Issuer"],
+                    _configuration["Tokens:Audience"],
+                    claims,
+                    expires: DateTime.UtcNow.AddDays(99),
+                    signingCredentials: credentials
+                );
 
-                return tokenFinal;
+                var results = new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(tokenManejador),
+                    expiration = tokenManejador.ValidTo,
+                    request
+                };
+
+                return results;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
+        }
+
+        public string cifrarMD5(string password)
+        {
+            MD5CryptoServiceProvider encriptador = new MD5CryptoServiceProvider();
+            byte[] bs = Encoding.UTF8.GetBytes(password);
+            bs = encriptador.ComputeHash(bs);
+
+            string passHash = null;
+
+            foreach (byte b in bs)
+            {
+                passHash += b.ToString("x2").ToLower();
+            }
+
+            string clave_cifrada = passHash;
+            return clave_cifrada;
         }
     }
 }
