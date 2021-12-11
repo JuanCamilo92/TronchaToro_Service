@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TronchaToro.Service.Context;
 using TronchaToro.Service.Helpers;
+using TronchaToro.Service.Models;
 using TronchaToro.Service.Models.Requests;
 using TronchaToro.Service.Models.Responses;
 
@@ -41,12 +42,16 @@ namespace TronchaToro.Service.Controllers
                 string contraseña = _tokenHelper.cifrarMD5(model.Contraseña);
 
                 //Validar password
-                string validPassword = await _context.GetValidUser(model);
-                if (string.IsNullOrEmpty(validPassword))
+                Response responseValid = await _context.GetValidUser(model);
+                if (string.IsNullOrEmpty(responseValid.Result.ToString()))
                     return BadRequest("Usuario o contraseña son incorrectos");
 
-                //Crear token
-                object token = _tokenHelper.CrearToken(model);
+                //Consulto el usuario con todos los datos
+                Response response = await _context.GetUser<UserModel>(model);
+                UserModel user = (UserModel)response.Result;
+
+                //Crear token con el usuario completo
+                object token = _tokenHelper.CrearToken(user);
 
                 return Created(string.Empty, token);
             }

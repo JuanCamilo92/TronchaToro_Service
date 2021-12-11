@@ -40,17 +40,55 @@ namespace TronchaToro.Service.Context
             }
             return _connection;
         }
-
-        public async Task<string> GetValidUser(LoginRequest request)
+        
+        public async Task<Response> GetValidUser(LoginRequest request)
         {
             var storeProcedure = "UserValidate";
             try
             {
                 var connection = GetConnection();
-                var response = await connection.QueryFirstOrDefaultAsync<T>(
+                var response = await connection.QueryFirstOrDefaultAsync(
                 storeProcedure, new { 
                     request.Identificacion,
                     request.Contraseña
+                },
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Response> GetUser<T>(LoginRequest request)
+        {
+            var storeProcedure = "GetUser";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.QueryFirstOrDefaultAsync<T>(
+                storeProcedure, new
+                {
+                    request.Identificacion
                 },
                 commandType: CommandType.StoredProcedure);
 

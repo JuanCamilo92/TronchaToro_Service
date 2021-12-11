@@ -9,6 +9,7 @@ namespace TronchaToro.Service.Context
 {
     public interface IData
     {
-        Task<string> GetValidUser(LoginRequest request);
+        Task<Response> GetValidUser(LoginRequest request);
+        Task<Response> GetUser<T>(LoginRequest request);
     }
 }

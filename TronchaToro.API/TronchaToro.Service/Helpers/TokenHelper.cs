@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using TronchaToro.Service.Models;
 using TronchaToro.Service.Models.Requests;
 
 namespace TronchaToro.Service.Helpers
@@ -20,13 +21,13 @@ namespace TronchaToro.Service.Helpers
         {
             _configuration = configuration;
         }
-        public object CrearToken(LoginRequest request) //List<string> roles
+        public object CrearToken(UserModel request) //List<string> roles
         {
             try
             {
                 //CLAIMS
                 var claims = new List<Claim> {
-                    new Claim(JwtRegisteredClaimNames.NameId, request.Identificacion),
+                    new Claim(JwtRegisteredClaimNames.NameId, request.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
