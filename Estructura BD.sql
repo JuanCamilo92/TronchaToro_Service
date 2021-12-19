@@ -15,3 +15,17 @@ PhoneNumber varchar(100),
 imageId varchar(4000),
 imageFullPath varchar(4000)
 )
+
+GO
+
+CREATE TABLE Comidas(
+Id int primary key identity,
+Description varchar(100),
+Price numeric(10,2)
+)
+GO
+CREATE TABLE FotosComidas(
+Id int primary key identity,
+Food_Id int,
+ImagePath Varchar(4000)
+)

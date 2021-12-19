@@ -40,10 +40,11 @@ namespace TronchaToro.Service.Controllers
 
                 //Encriptar password
                 string contraseña = _tokenHelper.cifrarMD5(model.Contraseña);
+                model.Contraseña = contraseña;
 
                 //Validar password
                 Response responseValid = await _context.GetValidUser(model);
-                if (string.IsNullOrEmpty(responseValid.Result.ToString()))
+                if (responseValid.Result == null)
                     return BadRequest("Usuario o contraseña son incorrectos");
 
                 //Consulto el usuario con todos los datos

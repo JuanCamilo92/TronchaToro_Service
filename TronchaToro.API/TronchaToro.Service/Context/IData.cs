@@ -11,5 +11,6 @@ namespace TronchaToro.Service.Context
     {
         Task<Response> GetValidUser(LoginRequest request);
         Task<Response> GetUser<T>(LoginRequest request);
+        Task<Response> GetFoods<T>();
     }
 }

@@ -21,13 +21,13 @@ namespace TronchaToro.Service.Helpers
         {
             _configuration = configuration;
         }
-        public object CrearToken(UserModel request) //List<string> roles
+        public object CrearToken(UserModel user) //List<string> roles
         {
             try
             {
                 //CLAIMS
                 var claims = new List<Claim> {
-                    new Claim(JwtRegisteredClaimNames.NameId, request.Email),
+                    new Claim(JwtRegisteredClaimNames.NameId, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
@@ -53,7 +53,7 @@ namespace TronchaToro.Service.Helpers
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(tokenManejador),
                     expiration = tokenManejador.ValidTo,
-                    request
+                    user
                 };
 
                 return results;

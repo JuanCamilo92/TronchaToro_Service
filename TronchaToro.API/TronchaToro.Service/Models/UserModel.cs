@@ -17,12 +17,14 @@ namespace TronchaToro.Service.Models
 		public string PhoneNumber { get; set; }
 		public string imageId { get; set; }
 		public string SocialImageURL { get; set; }
-		public string ImageFullPath => string.IsNullOrEmpty(SocialImageURL)
-			? string.IsNullOrEmpty(imageId)
-				? $"https://vehiclesapijs.azurewebsites.net/Images/no-image.png"
-				: $"https://vehiclesjcsg.blob.core.windows.net/users/{imageId}"
-			: String.IsNullOrEmpty(SocialImageURL)
-				? $"https://vehiclesapijs.azurewebsites.net/Images/no-image.png"
-				: SocialImageURL;
+		//ORGANIZAR →
+		public string ImageFullPath =>
+			string.IsNullOrEmpty(SocialImageURL) && string.IsNullOrEmpty(imageId)
+			? $"http://172.27.144.1:100/ImgTronchaToro/users/no-image.png"
+			: !string.IsNullOrEmpty(imageId)
+				? $"http://172.27.144.1:100/ImgTronchaToro/users/{imageId}"
+					: !string.IsNullOrEmpty(SocialImageURL)
+					? SocialImageURL
+						: $"http://172.27.144.1:100/ImgTronchaToro/users/no-image.png";
 	}
 }
