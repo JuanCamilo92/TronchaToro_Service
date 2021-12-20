@@ -26,5 +26,7 @@ namespace TronchaToro.Service.Models
 					: !string.IsNullOrEmpty(SocialImageURL)
 					? SocialImageURL
 						: $"http://172.27.144.1:100/ImgTronchaToro/users/no-image.png";
-	}
+
+        public List<OrderModel> orders { get; set; }
+    }
 }
