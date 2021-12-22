@@ -7,9 +7,9 @@ namespace TronchaToro.Service.Models
 {
     public class FoodModel
     {
-        public int Id { get; set; }
-        public string Description { get; set; }
-        public int Price { get; set; }
+        public int IdFood { get; set; }
+        public string DescriptionFood { get; set; }
+        public int PriceFood { get; set; }
         public string ImageId { get; set; }
         public string Observations { get; set; }
         public string ImageFullPath => string.IsNullOrEmpty(ImageId)

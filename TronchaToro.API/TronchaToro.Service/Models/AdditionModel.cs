@@ -7,8 +7,8 @@ namespace TronchaToro.Service.Models
 {
     public class AdditionModel
     {
-        public int Id { get; set; }
-        public string Description { get; set; }
-        public int Price { get; set; }
+        public int IdAddition { get; set; }
+        public string DescriptionAddition { get; set; }
+        public int PriceAddition { get; set; }
     }
 }

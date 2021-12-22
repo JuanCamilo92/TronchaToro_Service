@@ -10,7 +10,7 @@ namespace TronchaToro.Service.Models.Requests
     {
         [Required(ErrorMessage = "Por favor digitar el campo {0}")]
         public string Email { get; set; }
-        [Required(ErrorMessage = "Por favor digitar el campo {0}")]
+        //[Required(ErrorMessage = "Por favor digitar el campo {0}")]
         public string Contraseña { get; set; }
     }
 }

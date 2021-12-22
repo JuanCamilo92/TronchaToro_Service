@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using TronchaToro.Service.Models;
 using TronchaToro.Service.Models.Requests;
 using TronchaToro.Service.Models.Responses;
 
@@ -151,5 +152,110 @@ namespace TronchaToro.Service.Context
                 throw;
             }
         }
+
+        public async Task<Response> GetUserInfo(string email)
+        {
+            var storeProcedure = "GetUserInfo";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.QueryAsync<UserModel, OrderModel,
+                                            OrderDetailsModel, FoodModel, OrdersDetailAdditionModel,
+                                            AdditionModel, UserModel>(
+                storeProcedure,
+                (user, IdOrder, IdOrderDetail, IdFood, IdOrderDetailAddition, IdAddition) =>
+                {
+                    user.orders = new List<OrderModel>();
+                    user.orders.Add(IdOrder);
+                    IdOrder.orderDetails = new List<OrderDetailsModel>();
+                    IdOrder.orderDetails.Add(IdOrderDetail);
+                    IdOrderDetail.foods = new List<FoodModel>();
+                    IdOrderDetail.foods.Add(IdFood);
+                    IdOrderDetail.OrdersDetailAdditions = new List<OrdersDetailAdditionModel>();
+                    IdOrderDetail.OrdersDetailAdditions.Add(IdOrderDetailAddition);
+                    IdOrderDetailAddition.Additions = new List<AdditionModel>();
+                    IdOrderDetailAddition.Additions.Add(IdAddition);
+
+                    return user;
+                }, new { email },
+                commandType: CommandType.StoredProcedure,
+                splitOn: "Email,IdOrder,IdOrderDetail,IdFood,IdOrderDetailAddition,IdAddition");
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        //public async Task<Response> GetUserInfo(string email)
+        //{
+        //    var storeProcedure = "GetUserInfo";
+        //    try
+        //    {
+        //        var connection = GetConnection();
+        //        var response = await connection.QueryAsync<UserModel, OrderModel,
+        //                                    OrderDetailsModel, FoodModel, OrdersDetailAdditionModel,
+        //                                    AdditionModel, UserModel>(
+        //        storeProcedure,
+        //        (user, IdOrder, IdOrderDetail, IdFood, IdOrderDetailAddition, IdAddition) =>
+        //        {
+        //            user.orders = new List<OrderModel>();
+        //            user.orders.Add(IdOrder);
+        //            IdOrder.orderDetails = new List<OrderDetailsModel>();
+        //            IdOrder.orderDetails.Add(IdOrderDetail);
+        //            IdOrderDetail.foods = new List<FoodModel>();
+        //            IdOrderDetail.foods.Add(IdFood);
+        //            IdOrderDetail.OrdersDetailAdditions = new List<OrdersDetailAdditionModel>();
+        //            IdOrderDetail.OrdersDetailAdditions.Add(IdOrderDetailAddition);
+        //            IdOrderDetailAddition.Additions = new List<AdditionModel>();
+        //            IdOrderDetailAddition.Additions.Add(IdAddition);
+
+        //            return user;
+        //        }, new { email },
+        //        commandType: CommandType.StoredProcedure,
+        //        splitOn: "Email,IdOrder,IdOrderDetail,IdFood,IdOrderDetailAddition,IdAddition");
+
+        //        CloseConnection();
+
+        //        Response Respuesta = new Response()
+        //        {
+        //            Result = response,
+        //            IsSuccess = true
+        //        };
+
+        //        if (Respuesta.Result == null)
+        //        {
+        //            return new Response
+        //            {
+        //                IsSuccess = false,
+        //                Message = "No hay resultados"
+        //            };
+        //        }
+
+        //        return Respuesta;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
     }
 }

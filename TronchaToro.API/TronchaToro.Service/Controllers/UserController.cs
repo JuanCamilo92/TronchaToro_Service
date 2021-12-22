@@ -61,5 +61,23 @@ namespace TronchaToro.Service.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("GetUserInfo")]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            try
+            {
+                Response response = await _context.GetUserInfo("jcamilo.sg92@gmail.com");
+                List<UserModel> foodModel = (List<UserModel>)response.Result;
+
+                return Ok(foodModel);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
