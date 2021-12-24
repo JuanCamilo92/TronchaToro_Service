@@ -48,7 +48,7 @@ namespace TronchaToro.Service.Controllers
                     return BadRequest("Usuario o contraseña son incorrectos");
 
                 //Consulto el usuario con todos los datos
-                Response response = await _context.GetUser<UserModel>(model);
+                Response response = await _context.GetUser<UserModel>(model.Email);
                 UserModel user = (UserModel)response.Result;
 
                 //Crear token con el usuario completo
@@ -63,13 +63,13 @@ namespace TronchaToro.Service.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserInfo")]
-        public async Task<IActionResult> GetUserInfo()
+        [Route("GetUserInfo/{email}")]
+        public async Task<IActionResult> GetUserInfo(string email)
         {
             try
             {
-                Response response = await _context.GetUserInfo("jcamilo.sg92@gmail.com");
-                List<UserModel> foodModel = (List<UserModel>)response.Result;
+                Response response = await _context.GetUser<UserModel>(email);
+                UserModel foodModel = (UserModel)response.Result;
 
                 return Ok(foodModel);
 

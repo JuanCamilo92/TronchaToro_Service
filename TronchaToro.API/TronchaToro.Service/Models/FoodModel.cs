@@ -13,7 +13,7 @@ namespace TronchaToro.Service.Models
         public string ImageId { get; set; }
         public string Observations { get; set; }
         public string ImageFullPath => string.IsNullOrEmpty(ImageId)
-            ? $"http://172.27.144.1:100/ImgTronchaToro/foods/no-image.png"
-            : $"http://172.27.144.1:100/ImgTronchaToro/foods/{ImageId}";
+            ? $"http://192.168.1.67:100/ImgTronchaToro/foods/no-image.png"
+            : $"http://192.168.1.67:100/ImgTronchaToro/foods/{ImageId}";
     }
 }

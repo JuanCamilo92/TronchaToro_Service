@@ -80,7 +80,7 @@ namespace TronchaToro.Service.Context
             }
         }
 
-        public async Task<Response> GetUser<T>(LoginRequest request)
+        public async Task<Response> GetUser<T>(string email)
         {
             var storeProcedure = "GetUser";
             try
@@ -89,7 +89,7 @@ namespace TronchaToro.Service.Context
                 var response = await connection.QueryFirstOrDefaultAsync<T>(
                 storeProcedure, new
                 {
-                    Email = request.Email
+                    Email = email
                 },
                 commandType: CommandType.StoredProcedure);
 
@@ -153,58 +153,7 @@ namespace TronchaToro.Service.Context
             }
         }
 
-        public async Task<Response> GetUserInfo(string email)
-        {
-            var storeProcedure = "GetUserInfo";
-            try
-            {
-                var connection = GetConnection();
-                var response = await connection.QueryAsync<UserModel, OrderModel,
-                                            OrderDetailsModel, FoodModel, OrdersDetailAdditionModel,
-                                            AdditionModel, UserModel>(
-                storeProcedure,
-                (user, IdOrder, IdOrderDetail, IdFood, IdOrderDetailAddition, IdAddition) =>
-                {
-                    user.orders = new List<OrderModel>();
-                    user.orders.Add(IdOrder);
-                    IdOrder.orderDetails = new List<OrderDetailsModel>();
-                    IdOrder.orderDetails.Add(IdOrderDetail);
-                    IdOrderDetail.foods = new List<FoodModel>();
-                    IdOrderDetail.foods.Add(IdFood);
-                    IdOrderDetail.OrdersDetailAdditions = new List<OrdersDetailAdditionModel>();
-                    IdOrderDetail.OrdersDetailAdditions.Add(IdOrderDetailAddition);
-                    IdOrderDetailAddition.Additions = new List<AdditionModel>();
-                    IdOrderDetailAddition.Additions.Add(IdAddition);
 
-                    return user;
-                }, new { email },
-                commandType: CommandType.StoredProcedure,
-                splitOn: "Email,IdOrder,IdOrderDetail,IdFood,IdOrderDetailAddition,IdAddition");
-
-                CloseConnection();
-
-                Response Respuesta = new Response()
-                {
-                    Result = response,
-                    IsSuccess = true
-                };
-
-                if (Respuesta.Result == null)
-                {
-                    return new Response
-                    {
-                        IsSuccess = false,
-                        Message = "No hay resultados"
-                    };
-                }
-
-                return Respuesta;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
         //public async Task<Response> GetUserInfo(string email)
         //{
         //    var storeProcedure = "GetUserInfo";
