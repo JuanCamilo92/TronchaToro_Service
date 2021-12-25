@@ -9,8 +9,8 @@ namespace TronchaToro.Service.Models
 {
     public class OrderModel
     {
-        public int IdOrder { get; set; }
+        public int? IdOrder { get; set; }
         public string NOrder => IdOrder == null ? "0" : $"00{IdOrder}";
-        //public List<OrderDetailsModel> orderDetails { get; set; }
+        public List<OrderDetailsModel> orderDetails { get; set; }
     }
 }

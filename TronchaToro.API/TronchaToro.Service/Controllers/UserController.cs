@@ -79,5 +79,47 @@ namespace TronchaToro.Service.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("GetOrdersInfo/{email}")]
+        public async Task<IActionResult> GetOrdersInfo(string email)
+        {
+            try
+            {
+                Response OrdersResponse = await _context.GetOrders<OrderModel>(email);
+                List<OrderModel> orders = (List<OrderModel>)OrdersResponse.Result;
+                Response OrdersDetailResponse = await _context.GetOrdersDetail<OrderDetailsModel>(email);
+                List<OrderDetailsModel> ordersDetail = (List<OrderDetailsModel>)OrdersResponse.Result;
+
+                List<OrderModel> orderReturn = (from O in orders join D in ordersDetail on O.IdOrder equals D.IdOrderDetail).ToList();
+
+                //UserModel foodModel = (UserModel)response.Result;
+
+                return Ok(Orders);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        //[HttpGet]
+        //[Route("GetOrdersInfo")]
+        //public async Task<IActionResult> GetOrdersInfo()
+        //{
+        //    try
+        //    {
+        //        Response response = await _context.GetOrdersInfo();
+        //        List<OrderModel> foodModel = (List<OrderModel>)response.Result;
+
+        //        return Ok(foodModel);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
     }
 }

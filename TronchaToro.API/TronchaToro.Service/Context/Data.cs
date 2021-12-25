@@ -153,34 +153,99 @@ namespace TronchaToro.Service.Context
             }
         }
 
+        public async Task<Response> GetOrders<T>(string email)
+        {
+            var storeProcedure = "GetOrders";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.QueryAsync<T>(
+                storeProcedure, new { email },
+                commandType: CommandType.StoredProcedure);
 
-        //public async Task<Response> GetUserInfo(string email)
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Response> GetOrdersDetail<T>(string email)
+        {
+            var storeProcedure = "GetOrdersDetail";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.QueryAsync<T>(
+                storeProcedure, new { email },
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        //public async Task<Response> GetOrdersInfo()
         //{
-        //    var storeProcedure = "GetUserInfo";
+        //    var storeProcedure = "GetOrders";
         //    try
         //    {
         //        var connection = GetConnection();
-        //        var response = await connection.QueryAsync<UserModel, OrderModel,
-        //                                    OrderDetailsModel, FoodModel, OrdersDetailAdditionModel,
-        //                                    AdditionModel, UserModel>(
+        //        var response = await connection.QueryAsync<OrderModel,
+        //                                    List<OrderDetailsModel>, OrderModel>(
         //        storeProcedure,
-        //        (user, IdOrder, IdOrderDetail, IdFood, IdOrderDetailAddition, IdAddition) =>
+        //        (IdOrder, IdOrderDetail) =>
         //        {
-        //            user.orders = new List<OrderModel>();
-        //            user.orders.Add(IdOrder);
-        //            IdOrder.orderDetails = new List<OrderDetailsModel>();
-        //            IdOrder.orderDetails.Add(IdOrderDetail);
-        //            IdOrderDetail.foods = new List<FoodModel>();
-        //            IdOrderDetail.foods.Add(IdFood);
-        //            IdOrderDetail.OrdersDetailAdditions = new List<OrdersDetailAdditionModel>();
-        //            IdOrderDetail.OrdersDetailAdditions.Add(IdOrderDetailAddition);
-        //            IdOrderDetailAddition.Additions = new List<AdditionModel>();
-        //            IdOrderDetailAddition.Additions.Add(IdAddition);
 
-        //            return user;
-        //        }, new { email },
+        //                List<OrderDetailsModel> Detail = IdOrderDetail.Where(x => x.IdOrderDetail == IdOrder.IdOrder).ToList();
+        //            IdOrder.orderDetails = new List<OrderDetailsModel>();
+        //            IdOrder.orderDetails = Detail;
+
+
+        //            return IdOrder;
+        //        }//, new { email }
+        //        ,
         //        commandType: CommandType.StoredProcedure,
-        //        splitOn: "Email,IdOrder,IdOrderDetail,IdFood,IdOrderDetailAddition,IdAddition");
+        //        splitOn: "IdOrder,IdDetail");
 
         //        CloseConnection();
 
