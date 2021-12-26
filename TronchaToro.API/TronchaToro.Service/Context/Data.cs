@@ -153,6 +153,40 @@ namespace TronchaToro.Service.Context
             }
         }
 
+        public async Task<Response> GetAdditions<T>()
+        {
+            var storeProcedure = "GetAdditions";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.QueryAsync<T>(
+                storeProcedure,
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         public async Task<Response> GetOrders<T>(string email)
         {
             var storeProcedure = "GetOrders";
@@ -191,6 +225,41 @@ namespace TronchaToro.Service.Context
         public async Task<Response> GetOrdersDetail<T>(string email)
         {
             var storeProcedure = "GetOrdersDetail";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.QueryAsync<T>(
+                storeProcedure, new { email },
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Response> GetOrdersDetailAdditions<T>(string email)
+        {
+            var storeProcedure = "GetOrdersDetailAdditions";
             try
             {
                 var connection = GetConnection();

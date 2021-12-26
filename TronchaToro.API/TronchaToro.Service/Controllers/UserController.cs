@@ -86,16 +86,61 @@ namespace TronchaToro.Service.Controllers
         {
             try
             {
+                Response userResponse = await _context.GetUser<UserModel>(email);
+                UserModel users = (UserModel)userResponse.Result;
+
                 Response OrdersResponse = await _context.GetOrders<OrderModel>(email);
                 List<OrderModel> orders = (List<OrderModel>)OrdersResponse.Result;
+
                 Response OrdersDetailResponse = await _context.GetOrdersDetail<OrderDetailsModel>(email);
-                List<OrderDetailsModel> ordersDetail = (List<OrderDetailsModel>)OrdersResponse.Result;
+                List<OrderDetailsModel> ordersDetail = (List<OrderDetailsModel>)OrdersDetailResponse.Result;
 
-                List<OrderModel> orderReturn = (from O in orders join D in ordersDetail on O.IdOrder equals D.IdOrderDetail).ToList();
+                Response OrdersDetailAdditionsResponse = await _context.GetOrdersDetailAdditions<OrdersDetailAdditionModel>(email);
+                List<OrdersDetailAdditionModel> ordersDetailAddition = (List<OrdersDetailAdditionModel>)OrdersDetailAdditionsResponse.Result;
 
-                //UserModel foodModel = (UserModel)response.Result;
+                Response FoodResponse = await _context.GetFoods<FoodModel>();
+                List<FoodModel> foods = (List<FoodModel>)FoodResponse.Result;
 
-                return Ok(Orders);
+                Response AdditionResponse = await _context.GetAdditions<AdditionModel>();
+                List<AdditionModel> additions = (List<AdditionModel>)AdditionResponse.Result;
+
+                users.orders = orders;
+
+                foreach (var item in orders)
+                    item.orderDetails = ordersDetail.Where(x => x.IdOrder == item.IdOrder).ToList();
+
+                foreach (var item in ordersDetail)
+                {
+                    item.OrdersDetailAdditions = ordersDetailAddition.Where(x => x.IdorderDetail == item.IdDetail).ToList();
+                    item.foods = foods.Where(x => x.IdFood == item.IdFood).ToList();
+                }
+
+                foreach (var item in ordersDetailAddition)
+                    item.additions = additions.Where(x => x.IdAddition == item.IdAddition).ToList();
+
+
+                //List<FoodModel> foods = new List<FoodModel>();
+                //List<AdditionModel> Additions = new List<AdditionModel>();
+
+                //var orderReturn = (from O in orders 
+                //                   join D in ordersDetail on O.IdOrder equals D.IdOrderDetail
+                //                   join DA in ordersDetailAddition on D.IdOrderDetailAdditions equals DA.IdOrderDetailAddition
+                //                   select new {  
+                //                        O.IdOrder,
+                //                        O.NOrder,
+                //                        D.IdDetail,
+                //                        D.IdFood,
+                //                        D.DescriptionFood,
+                //                        D.ImageId,
+                //                        D.ImageFullPath,
+                //                        D.Observations,
+                //                        D.PriceFood,
+                //                        DA.IdOrderDetailAddition,
+                //                        DA.IdAddition,
+                //                        DA.DescriptionAddition,
+                //                        DA.PriceAddition
+                //                   }).ToList();            
+                return Ok(users);
 
             }
             catch (Exception ex)

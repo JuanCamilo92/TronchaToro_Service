@@ -27,6 +27,6 @@ namespace TronchaToro.Service.Models
                     ? SocialImageURL
                         : $"http://192.168.1.67:100/ImgTronchaToro/users/no-image.png";
 
-        //public List<OrderModel> orders { get; set; }
+        public List<OrderModel> orders { get; set; }
 	}
 }
