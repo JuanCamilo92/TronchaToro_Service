@@ -81,6 +81,24 @@ namespace TronchaToro.Service.Controllers
         }
 
         [HttpGet]
+        [Route("GetUsers")]
+        public async Task<IActionResult> GetUsers()
+        {
+            try
+            {
+                Response response = await _context.GetUsers<UserModel>();
+                List<UserModel> foodModel = (List<UserModel>)response.Result;
+
+                return Ok(foodModel);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("GetOrdersInfo/{email}")]
         public async Task<IActionResult> GetOrdersInfo(string email)
         {
@@ -148,23 +166,5 @@ namespace TronchaToro.Service.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        //[HttpGet]
-        //[Route("GetOrdersInfo")]
-        //public async Task<IActionResult> GetOrdersInfo()
-        //{
-        //    try
-        //    {
-        //        Response response = await _context.GetOrdersInfo();
-        //        List<OrderModel> foodModel = (List<OrderModel>)response.Result;
-
-        //        return Ok(foodModel);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
     }
 }

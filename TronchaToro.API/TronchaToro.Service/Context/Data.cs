@@ -118,6 +118,41 @@ namespace TronchaToro.Service.Context
             }
         }
 
+        public async Task<Response> GetUsers<T>()
+        {
+            var storeProcedure = "GetUsers";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.QueryAsync<T>(
+                storeProcedure,
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<Response> GetFoods<T>()
         {
             var storeProcedure = "GetFoods";

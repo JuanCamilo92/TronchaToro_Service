@@ -16,5 +16,6 @@ namespace TronchaToro.Service.Context
         Task<Response> GetOrdersDetail<T>(string email);
         Task<Response> GetOrdersDetailAdditions<T>(string email);
         Task<Response> GetAdditions<T>();
+        Task<Response> GetUsers<T>();
     }
 }

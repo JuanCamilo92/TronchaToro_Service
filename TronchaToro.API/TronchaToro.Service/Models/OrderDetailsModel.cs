@@ -10,8 +10,10 @@ namespace TronchaToro.Service.Models
     {
         public int IdDetail { get; set; }
         public int IdOrder { get; set; }
-        public List<OrdersDetailAdditionModel> OrdersDetailAdditions { get; set; }
         public int IdFood { get; set; }
+        public int Quantity { get; set; }
         public List<FoodModel> foods { get; set; }
+        public List<OrdersDetailAdditionModel> OrdersDetailAdditions { get; set; }
+        
     }
 }

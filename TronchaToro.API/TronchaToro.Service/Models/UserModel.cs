@@ -28,5 +28,6 @@ namespace TronchaToro.Service.Models
                         : $"http://192.168.1.67:100/ImgTronchaToro/users/no-image.png";
 
         public List<OrderModel> orders { get; set; }
-	}
+        public int NOrders { get; set; }
+    }
 }
