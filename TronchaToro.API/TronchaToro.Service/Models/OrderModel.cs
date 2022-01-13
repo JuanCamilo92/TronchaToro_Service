@@ -13,5 +13,9 @@ namespace TronchaToro.Service.Models
         public string NOrder => IdOrder == null ? "0" : $"00{IdOrder}";
         public double Total { get; set; }
         public List<OrderDetailsModel> orderDetails { get; set; }
+        public int IdStatePay { get; set; }
+        public int IdStateTran { get; set; }
+        public string StatePay { get; set; }
+        public string StateTran { get; set; }
     }
 }

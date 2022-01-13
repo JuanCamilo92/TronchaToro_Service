@@ -12,9 +12,9 @@ namespace TronchaToro.Service.Context
         Task<Response> GetValidUser(LoginRequest request);
         Task<Response> GetUser<T>(string email);
         Task<Response> GetFoods<T>();
-        Task<Response> GetOrders<T>(string email);
-        Task<Response> GetOrdersDetail<T>(string email);
-        Task<Response> GetOrdersDetailAdditions<T>(string email);
+        Task<Response> GetOrders<T>(string email, int State);
+        Task<Response> GetOrdersDetail<T>(string email, int State);
+        Task<Response> GetOrdersDetailAdditions<T>(string email, int State);
         Task<Response> GetAdditions<T>();
         Task<Response> GetUsers<T>();
     }

@@ -99,21 +99,21 @@ namespace TronchaToro.Service.Controllers
         }
 
         [HttpGet]
-        [Route("GetOrdersInfo/{email}")]
-        public async Task<IActionResult> GetOrdersInfo(string email)
+        [Route("GetOrdersInfo/{email}/{State}")]
+        public async Task<IActionResult> GetOrdersInfo(string email, int State)
         {
             try
             {
                 Response userResponse = await _context.GetUser<UserModel>(email);
                 UserModel users = (UserModel)userResponse.Result;
 
-                Response OrdersResponse = await _context.GetOrders<OrderModel>(email);
+                Response OrdersResponse = await _context.GetOrders<OrderModel>(email, State);
                 List<OrderModel> orders = (List<OrderModel>)OrdersResponse.Result;
 
-                Response OrdersDetailResponse = await _context.GetOrdersDetail<OrderDetailsModel>(email);
+                Response OrdersDetailResponse = await _context.GetOrdersDetail<OrderDetailsModel>(email, State);
                 List<OrderDetailsModel> ordersDetail = (List<OrderDetailsModel>)OrdersDetailResponse.Result;
 
-                Response OrdersDetailAdditionsResponse = await _context.GetOrdersDetailAdditions<OrdersDetailAdditionModel>(email);
+                Response OrdersDetailAdditionsResponse = await _context.GetOrdersDetailAdditions<OrdersDetailAdditionModel>(email, State);
                 List<OrdersDetailAdditionModel> ordersDetailAddition = (List<OrdersDetailAdditionModel>)OrdersDetailAdditionsResponse.Result;
 
                 Response FoodResponse = await _context.GetFoods<FoodModel>();

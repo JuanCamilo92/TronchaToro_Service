@@ -222,14 +222,14 @@ namespace TronchaToro.Service.Context
                 throw;
             }
         }
-        public async Task<Response> GetOrders<T>(string email)
+        public async Task<Response> GetOrders<T>(string email, int State)
         {
             var storeProcedure = "GetOrders";
             try
             {
                 var connection = GetConnection();
                 var response = await connection.QueryAsync<T>(
-                storeProcedure, new { email },
+                storeProcedure, new { email, State },
                 commandType: CommandType.StoredProcedure);
 
                 CloseConnection();
@@ -257,14 +257,14 @@ namespace TronchaToro.Service.Context
             }
         }
 
-        public async Task<Response> GetOrdersDetail<T>(string email)
+        public async Task<Response> GetOrdersDetail<T>(string email, int State)
         {
             var storeProcedure = "GetOrdersDetail";
             try
             {
                 var connection = GetConnection();
                 var response = await connection.QueryAsync<T>(
-                storeProcedure, new { email },
+                storeProcedure, new { email, State },
                 commandType: CommandType.StoredProcedure);
 
                 CloseConnection();
@@ -292,14 +292,14 @@ namespace TronchaToro.Service.Context
             }
         }
 
-        public async Task<Response> GetOrdersDetailAdditions<T>(string email)
+        public async Task<Response> GetOrdersDetailAdditions<T>(string email, int State)
         {
             var storeProcedure = "GetOrdersDetailAdditions";
             try
             {
                 var connection = GetConnection();
                 var response = await connection.QueryAsync<T>(
-                storeProcedure, new { email },
+                storeProcedure, new { email, State },
                 commandType: CommandType.StoredProcedure);
 
                 CloseConnection();
