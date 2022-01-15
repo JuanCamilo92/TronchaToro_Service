@@ -327,6 +327,181 @@ namespace TronchaToro.Service.Context
             }
         }
 
+        public async Task<Response> AddOrder<T>(OrderRequest orderRequest)
+        {
+            var storeProcedure = "Add_Orders";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.ExecuteAsync(
+                storeProcedure, orderRequest,
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Response> AddOrderDetail<T>(List<OrderDetailRequest> orderDetailRequest)
+        {
+            var storeProcedure = "Add_OrdersDetails";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.ExecuteAsync(
+                storeProcedure, orderDetailRequest,
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Response> AddOrderDetailAdditions<T>(List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests)
+        {
+            var storeProcedure = "Add_OrdersDetailsAdditions";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.ExecuteAsync(
+                storeProcedure, orderDetailsAdditionsRequests,
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Response> UpdateOrderDetail<T>(List<OrderDetailRequest> orderDetailRequest)
+        {
+            var storeProcedure = "Update_orderDetail";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.ExecuteAsync(
+                storeProcedure, orderDetailRequest,
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Response> UpdateOrderDetailAdditions<T>(List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests)
+        {
+            var storeProcedure = "Update_orderDetailAdditions";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.ExecuteAsync(
+                storeProcedure, orderDetailsAdditionsRequests,
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         //public async Task<Response> GetOrdersInfo()
         //{

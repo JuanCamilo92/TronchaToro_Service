@@ -20,7 +20,7 @@ namespace TronchaToro.Service.Models
         public string SocialImageURL { get; set; }
         public string ImageFullPath =>
             string.IsNullOrEmpty(SocialImageURL) && string.IsNullOrEmpty(imageId)
-            ? $"http://192.168.1.65100/ImgTronchaToro/users/no-image.png"
+            ? $"http://192.168.1.65:100/ImgTronchaToro/users/no-image.png"
             : !string.IsNullOrEmpty(imageId)
                 ? $"http://192.168.1.65:100/ImgTronchaToro/users/{imageId}"
                     : !string.IsNullOrEmpty(SocialImageURL)

@@ -135,30 +135,60 @@ namespace TronchaToro.Service.Controllers
 
                 foreach (var item in ordersDetailAddition)
                     item.additions = additions.Where(x => x.IdAddition == item.IdAddition).ToList();
-
-
-                //List<FoodModel> foods = new List<FoodModel>();
-                //List<AdditionModel> Additions = new List<AdditionModel>();
-
-                //var orderReturn = (from O in orders 
-                //                   join D in ordersDetail on O.IdOrder equals D.IdOrderDetail
-                //                   join DA in ordersDetailAddition on D.IdOrderDetailAdditions equals DA.IdOrderDetailAddition
-                //                   select new {  
-                //                        O.IdOrder,
-                //                        O.NOrder,
-                //                        D.IdDetail,
-                //                        D.IdFood,
-                //                        D.DescriptionFood,
-                //                        D.ImageId,
-                //                        D.ImageFullPath,
-                //                        D.Observations,
-                //                        D.PriceFood,
-                //                        DA.IdOrderDetailAddition,
-                //                        DA.IdAddition,
-                //                        DA.DescriptionAddition,
-                //                        DA.PriceAddition
-                //                   }).ToList();            
+   
                 return Ok(users);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("AddOrder")]
+        public async Task<IActionResult> AddOrder(OrderRequest Order)
+        {
+            try
+            {
+                Response responseOrder = await _context.AddOrder<Response>(Order);
+                if (!responseOrder.IsSuccess)
+                    return BadRequest(responseOrder.Message);
+
+                Response responseOrderDetails = await _context.AddOrderDetail<Response>(Order.orderDetails);
+                if (!responseOrderDetails.IsSuccess)
+                    return BadRequest(responseOrderDetails.Message);
+
+                List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests = (List<OrderDetailsAdditionsRequest>)Order.orderDetails.Select(x => x.OrderDetailAdditions);
+                Response responseOrderDetailsAdditions = await _context.AddOrderDetailAdditions<Response>(orderDetailsAdditionsRequests);
+                if (!responseOrderDetailsAdditions.IsSuccess)
+                    return BadRequest(responseOrderDetailsAdditions.Message);
+
+                return Ok("Datos guardados con éxito");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        [Route("UpdateOrder")]
+        public async Task<IActionResult> UpdateOrder(OrderRequest Order)
+        {
+            try
+            {
+                Response responseOrderDetails = await _context.UpdateOrderDetail<Response>(Order.orderDetails);
+                if (!responseOrderDetails.IsSuccess)
+                    return BadRequest(responseOrderDetails.Message);
+
+                List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests = (List<OrderDetailsAdditionsRequest>)Order.orderDetails.Select(x => x.OrderDetailAdditions);
+                Response responseOrderDetailsAdditions = await _context.UpdateOrderDetailAdditions<Response>(orderDetailsAdditionsRequests);
+                if (!responseOrderDetailsAdditions.IsSuccess)
+                    return BadRequest(responseOrderDetailsAdditions.Message);
+
+                return Ok("Datos actualizados con éxito");
 
             }
             catch (Exception ex)
