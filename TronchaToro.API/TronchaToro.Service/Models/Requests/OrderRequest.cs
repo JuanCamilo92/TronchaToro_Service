@@ -8,11 +8,11 @@ namespace TronchaToro.Service.Models.Requests
     public class OrderRequest
     {
         public string FullName { get; set; }
-        public int IdUser { get; set; }
+        public string IdUser { get; set; }
         public string Address { get; set; }
         public string PhoneNumber { get; set; }
         public int IdStateTran { get; set; }
         public int IdStatePay { get; set; }
-        public List<OrderDetailRequest> orderDetails { get; set; }
+        public OrderDetailRequest orderDetails { get; set; }
     }
 }

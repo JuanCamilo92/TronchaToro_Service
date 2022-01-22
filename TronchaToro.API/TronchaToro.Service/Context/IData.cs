@@ -19,10 +19,10 @@ namespace TronchaToro.Service.Context
         Task<Response> GetUsers<T>();
 
         Task<Response> AddOrder<T>(OrderRequest orderRequest);
-        Task<Response> AddOrderDetail<T>(List<OrderDetailRequest> orderDetailRequest);
+        Task<Response> AddOrderDetail<T>(OrderDetailRequest orderDetailRequest);
         Task<Response> AddOrderDetailAdditions<T>(List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests);
 
-        Task<Response> UpdateOrderDetail<T>(List<OrderDetailRequest> orderDetailRequest);
-        Task<Response> UpdateOrderDetailAdditions<T>(List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests);
+        Task<Response> UpdateOrderDetail<T>(OrderDetailRequest orderDetailRequest);
+        Task<Response> UpdateOrderDetailAdditions<T>(List<UOrderDetailsAdditionsRequest> orderDetailsAdditionsRequests);
     }
 }

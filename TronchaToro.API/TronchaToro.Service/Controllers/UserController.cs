@@ -151,18 +151,30 @@ namespace TronchaToro.Service.Controllers
         {
             try
             {
-                Response responseOrder = await _context.AddOrder<Response>(Order);
-                if (!responseOrder.IsSuccess)
-                    return BadRequest(responseOrder.Message);
+                if (Order.FullName != "")
+                {
+                    Response responseOrder = await _context.AddOrder<int>(Order);
+                    if (!responseOrder.IsSuccess)
+                        return BadRequest(responseOrder.Message);
 
-                Response responseOrderDetails = await _context.AddOrderDetail<Response>(Order.orderDetails);
+                    int order = (int)responseOrder.Result;
+                    Order.orderDetails.IdOrder = order;
+                }
+
+                Response responseOrderDetails = await _context.AddOrderDetail<int>(Order.orderDetails);
                 if (!responseOrderDetails.IsSuccess)
                     return BadRequest(responseOrderDetails.Message);
 
-                List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests = (List<OrderDetailsAdditionsRequest>)Order.orderDetails.Select(x => x.OrderDetailAdditions);
-                Response responseOrderDetailsAdditions = await _context.AddOrderDetailAdditions<Response>(orderDetailsAdditionsRequests);
-                if (!responseOrderDetailsAdditions.IsSuccess)
-                    return BadRequest(responseOrderDetailsAdditions.Message);
+                int idOrderDetail = (int)responseOrderDetails.Result;
+
+                List<UOrderDetailsAdditionsRequest> orderDetailsAdditionsRequests = 
+                    Order.orderDetails.OrderDetailAdditions.Select(x => new UOrderDetailsAdditionsRequest { IdAddition = x.IdAddition, Quantity = x.Quantity, Id = x.Id, IdDetailOrder = idOrderDetail }).ToList();
+                if (orderDetailsAdditionsRequests != null)
+                {
+                    Response responseOrderDetailsAdditions = await _context.UpdateOrderDetailAdditions<Response>(orderDetailsAdditionsRequests);
+                    if (!responseOrderDetailsAdditions.IsSuccess)
+                        return BadRequest(responseOrderDetailsAdditions.Message);
+                }
 
                 return Ok("Datos guardados con éxito");
 
@@ -175,18 +187,22 @@ namespace TronchaToro.Service.Controllers
 
         [HttpPut]
         [Route("UpdateOrder")]
-        public async Task<IActionResult> UpdateOrder(OrderRequest Order)
+        public async Task<IActionResult> UpdateOrder(OrderDetailRequest OrderDetail)
         {
             try
             {
-                Response responseOrderDetails = await _context.UpdateOrderDetail<Response>(Order.orderDetails);
+                Response responseOrderDetails = await _context.UpdateOrderDetail<Response>(OrderDetail);
                 if (!responseOrderDetails.IsSuccess)
                     return BadRequest(responseOrderDetails.Message);
 
-                List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests = (List<OrderDetailsAdditionsRequest>)Order.orderDetails.Select(x => x.OrderDetailAdditions);
-                Response responseOrderDetailsAdditions = await _context.UpdateOrderDetailAdditions<Response>(orderDetailsAdditionsRequests);
-                if (!responseOrderDetailsAdditions.IsSuccess)
-                    return BadRequest(responseOrderDetailsAdditions.Message);
+                List<UOrderDetailsAdditionsRequest> orderDetailsAdditionsRequests = OrderDetail.OrderDetailAdditions.Select(x => new UOrderDetailsAdditionsRequest { IdAddition = x.IdAddition, Quantity = x.Quantity, Id = x.Id, IdDetailOrder = x.IdDetailOrder }).ToList();
+                if (orderDetailsAdditionsRequests != null)
+                {
+                    Response responseOrderDetailsAdditions = await _context.UpdateOrderDetailAdditions<Response>(orderDetailsAdditionsRequests);
+                    if (!responseOrderDetailsAdditions.IsSuccess)
+                        return BadRequest(responseOrderDetailsAdditions.Message);
+                }
+                
 
                 return Ok("Datos actualizados con éxito");
 

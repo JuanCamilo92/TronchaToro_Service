@@ -333,8 +333,15 @@ namespace TronchaToro.Service.Context
             try
             {
                 var connection = GetConnection();
-                var response = await connection.ExecuteAsync(
-                storeProcedure, orderRequest,
+                var response = await connection.QueryFirstOrDefaultAsync<T>(
+                storeProcedure, new { 
+                    orderRequest.FullName,
+                    orderRequest.IdUser,
+                    orderRequest.Address,
+                    orderRequest.PhoneNumber,
+                    orderRequest.IdStateTran,
+                    orderRequest.IdStatePay
+                },
                 commandType: CommandType.StoredProcedure);
 
                 CloseConnection();
@@ -362,14 +369,19 @@ namespace TronchaToro.Service.Context
             }
         }
 
-        public async Task<Response> AddOrderDetail<T>(List<OrderDetailRequest> orderDetailRequest)
+        public async Task<Response> AddOrderDetail<T>(OrderDetailRequest orderDetailRequest)
         {
             var storeProcedure = "Add_OrdersDetails";
             try
             {
                 var connection = GetConnection();
-                var response = await connection.ExecuteAsync(
-                storeProcedure, orderDetailRequest,
+                var response = await connection.QueryFirstOrDefaultAsync<T>(
+                storeProcedure, new
+                {
+                    orderDetailRequest.IdOrder,
+                    orderDetailRequest.IdFood,
+                    orderDetailRequest.Quantity
+                },
                 commandType: CommandType.StoredProcedure);
 
                 CloseConnection();
@@ -432,14 +444,17 @@ namespace TronchaToro.Service.Context
             }
         }
 
-        public async Task<Response> UpdateOrderDetail<T>(List<OrderDetailRequest> orderDetailRequest)
+        public async Task<Response> UpdateOrderDetail<T>(OrderDetailRequest orderDetailRequest)
         {
             var storeProcedure = "Update_orderDetail";
             try
             {
                 var connection = GetConnection();
                 var response = await connection.ExecuteAsync(
-                storeProcedure, orderDetailRequest,
+                storeProcedure, new {
+                    orderDetailRequest.Quantity,
+                    orderDetailRequest.Id
+                },
                 commandType: CommandType.StoredProcedure);
 
                 CloseConnection();
@@ -467,7 +482,7 @@ namespace TronchaToro.Service.Context
             }
         }
 
-        public async Task<Response> UpdateOrderDetailAdditions<T>(List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests)
+        public async Task<Response> UpdateOrderDetailAdditions<T>(List<UOrderDetailsAdditionsRequest> orderDetailsAdditionsRequests)
         {
             var storeProcedure = "Update_orderDetailAdditions";
             try
