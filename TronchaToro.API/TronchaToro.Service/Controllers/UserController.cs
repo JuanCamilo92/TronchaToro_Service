@@ -212,5 +212,23 @@ namespace TronchaToro.Service.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete]
+        [Route("DeleteOrderDtl/{id}")]
+        public async Task<IActionResult> DeleteOrderDtl(int id)
+        {
+            try
+            {
+                Response responseOrderDetails = await _context.DeleteOrderDetail(id);
+                if (!responseOrderDetails.IsSuccess)
+                    return BadRequest(responseOrderDetails.Message);
+
+                return Ok("Datos Borrados con éxito.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

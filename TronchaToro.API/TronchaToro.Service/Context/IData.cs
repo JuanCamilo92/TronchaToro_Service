@@ -17,12 +17,11 @@ namespace TronchaToro.Service.Context
         Task<Response> GetOrdersDetailAdditions<T>(string email, int State);
         Task<Response> GetAdditions<T>();
         Task<Response> GetUsers<T>();
-
         Task<Response> AddOrder<T>(OrderRequest orderRequest);
         Task<Response> AddOrderDetail<T>(OrderDetailRequest orderDetailRequest);
         Task<Response> AddOrderDetailAdditions<T>(List<OrderDetailsAdditionsRequest> orderDetailsAdditionsRequests);
-
         Task<Response> UpdateOrderDetail<T>(OrderDetailRequest orderDetailRequest);
         Task<Response> UpdateOrderDetailAdditions<T>(List<UOrderDetailsAdditionsRequest> orderDetailsAdditionsRequests);
+        Task<Response> DeleteOrderDetail(int id);
     }
 }

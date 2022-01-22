@@ -517,6 +517,41 @@ namespace TronchaToro.Service.Context
             }
         }
 
+        public async Task<Response> DeleteOrderDetail(int id)
+        {
+            var storeProcedure = "Delete_OrdersDetails";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.ExecuteAsync(
+                storeProcedure, new { id },
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         //public async Task<Response> GetOrdersInfo()
         //{
