@@ -21,11 +21,13 @@ namespace TronchaToro.Service.Controllers
     {
         private readonly IData _context;
         private readonly ITokenHelper _tokenHelper;
+        private readonly IUserHelper _userHelper;
 
-        public UserController(IData context, ITokenHelper tokenHelper)
+        public UserController(IData context, ITokenHelper tokenHelper, IUserHelper userHelper)
         {
             _context = context;
             _tokenHelper = tokenHelper;
+            _userHelper = userHelper;
         }
 
         [HttpPost]
@@ -185,7 +187,7 @@ namespace TronchaToro.Service.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPost] //[HttpPut]
         [Route("UpdateOrder")]
         public async Task<IActionResult> UpdateOrder(OrderDetailRequest OrderDetail)
         {
@@ -213,7 +215,7 @@ namespace TronchaToro.Service.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpPost] //[HttpDelete]
         [Route("DeleteOrderDtl/{id}")]
         public async Task<IActionResult> DeleteOrderDtl(int id)
         {
@@ -224,6 +226,49 @@ namespace TronchaToro.Service.Controllers
                     return BadRequest(responseOrderDetails.Message);
 
                 return Ok("Datos Borrados con éxito.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("SocialLogin")]
+        public async Task<IActionResult> SocialLogin(RegisterUserRequest model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest("Usuario o contraseña son incorrectos");
+
+                Response userResponse = await _context.GetUser<UserModel>(model.Email);
+                UserModel users = (UserModel)userResponse.Result;
+                if (users != null)
+                {
+                    if (users.LoginType != model.LoginType)
+                    {
+                        return BadRequest("El usuario ya inició sesión previamente por email o por otra red social");
+                    }
+
+                    string contraseña = _tokenHelper.cifrarMD5(model.Password);
+                    model.Password = contraseña;
+
+                    Response responseValid = await _context.GetValidUser(new LoginRequest {Email = model.Email, Contraseña = contraseña});
+                    if (responseValid.Result == null)
+                        return BadRequest("Usuario o contraseña son incorrectos");
+
+                    await _userHelper.UpdateUserAsync(model);
+
+                    object token = _tokenHelper.CrearToken(users);
+                    return Created(string.Empty, token);
+                }
+                else
+                {
+                    await _userHelper.CreateUserAsync(model);
+                    object token = _tokenHelper.CrearToken(users);
+                    return Created(string.Empty, token);
+                }
             }
             catch (Exception ex)
             {

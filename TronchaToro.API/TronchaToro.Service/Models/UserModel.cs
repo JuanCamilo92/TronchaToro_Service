@@ -17,15 +17,20 @@ namespace TronchaToro.Service.Models
 		public string Address { get; set; }
 		public string PhoneNumber { get; set; }
         public string imageId { get; set; }
-        public string SocialImageURL { get; set; }
+        public string LoginType { get; set; }
         public string ImageFullPath =>
-            string.IsNullOrEmpty(SocialImageURL) && string.IsNullOrEmpty(imageId)
-            ? $"http://192.168.1.65:100/ImgTronchaToro/users/no-image.png"
-            : !string.IsNullOrEmpty(imageId)
-                ? $"http://192.168.1.65:100/ImgTronchaToro/users/{imageId}"
-                    : !string.IsNullOrEmpty(SocialImageURL)
-                    ? SocialImageURL
-                        : $"http://192.168.1.65:100/ImgTronchaToro/users/no-image.png";
+            string.IsNullOrEmpty(imageId)
+            ? $"https://troncha-toro.com/TT/ImgTronchaToro/users/no-image.png"
+            : $"https://troncha-toro.com/TT/ImgTronchaToro/users/{imageId}";
+
+        //public string ImageFullPath =>
+        //    string.IsNullOrEmpty(SocialImageURL) && string.IsNullOrEmpty(imageId)
+        //    ? $"http://192.168.1.65:100/ImgTronchaToro/users/no-image.png"
+        //    : !string.IsNullOrEmpty(imageId)
+        //        ? $"http://192.168.1.65:100/ImgTronchaToro/users/{imageId}"
+        //            : !string.IsNullOrEmpty(SocialImageURL)
+        //            ? SocialImageURL
+        //                : $"http://192.168.1.65:100/ImgTronchaToro/users/no-image.png";
 
         public List<OrderModel> orders { get; set; }
         public int NOrders { get; set; }

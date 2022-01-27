@@ -47,6 +47,7 @@ namespace TronchaToro.Service
 
             services.AddScoped<IData, Data>();
             services.AddScoped<ITokenHelper, TokenHelper>();
+            services.AddScoped<IUserHelper, UserHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
