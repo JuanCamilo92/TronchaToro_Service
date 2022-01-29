@@ -23,5 +23,7 @@ namespace TronchaToro.Service.Context
         Task<Response> UpdateOrderDetail<T>(OrderDetailRequest orderDetailRequest);
         Task<Response> UpdateOrderDetailAdditions<T>(List<UOrderDetailsAdditionsRequest> orderDetailsAdditionsRequests);
         Task<Response> DeleteOrderDetail(int id);
+        Task<Response> RegisterUser(RegisterUserRequest request);
+        Task<Response> RegisterUserUpdate(RegisterUserRequest request);
     }
 }

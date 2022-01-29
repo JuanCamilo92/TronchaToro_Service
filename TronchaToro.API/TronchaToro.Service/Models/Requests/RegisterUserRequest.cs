@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace TronchaToro.Service.Models.Requests
         public string imageId { get; set; }
         public string LoginType { get; set; }
         public byte[] Image { get; set; }
+        public string NombreImagen { get; set; }
+        public string ExtencionImagen { get; set; }
 
     }
 }

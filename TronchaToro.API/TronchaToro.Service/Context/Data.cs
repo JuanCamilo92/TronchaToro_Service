@@ -552,7 +552,92 @@ namespace TronchaToro.Service.Context
             }
         }
 
+        public async Task<Response> RegisterUser(RegisterUserRequest request)
+        {
+            var storeProcedure = "RegisterUser";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.ExecuteAsync(
+                storeProcedure, new {
+                    request.Email,
+                    request.Password,
+                    request.Rol_id,
+                    request.Name,
+                    request.LastName,
+                    request.BirthDate,
+                    request.Address,
+                    request.PhoneNumber,
+                    request.imageId,
+                    request.LoginType
+                },
+                commandType: CommandType.StoredProcedure);
 
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Response> RegisterUserUpdate(RegisterUserRequest request)
+        {
+            var storeProcedure = "RegisterUserUpdate";
+            try
+            {
+                var connection = GetConnection();
+                var response = await connection.ExecuteAsync(
+                storeProcedure, new {
+                    request.Email,
+                    request.Name,
+                    request.LastName,
+                    request.imageId
+                },
+                commandType: CommandType.StoredProcedure);
+
+                CloseConnection();
+
+                Response Respuesta = new Response()
+                {
+                    Result = response,
+                    IsSuccess = true
+                };
+
+                if (Respuesta.Result == null)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = "No hay resultados"
+                    };
+                }
+
+                return Respuesta;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        
         //public async Task<Response> GetOrdersInfo()
         //{
         //    var storeProcedure = "GetOrders";
