@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TronchaToro.Service.Context;
 using TronchaToro.Service.Helpers;
@@ -72,7 +75,6 @@ namespace TronchaToro.Service.Controllers
             {
                 Response response = await _context.GetUser<UserModel>(email);
                 UserModel foodModel = (UserModel)response.Result;
-
                 return Ok(foodModel);
 
             }
@@ -234,6 +236,7 @@ namespace TronchaToro.Service.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [Route("SocialLogin")]
         public async Task<IActionResult> SocialLogin(RegisterUserRequest model)
         {
@@ -251,12 +254,12 @@ namespace TronchaToro.Service.Controllers
                         return BadRequest("El usuario ya inició sesión previamente por email o por otra red social");
                     }
 
-                    string contraseña = _tokenHelper.cifrarMD5(model.Password);
-                    model.Password = contraseña;
+                    //string contraseña = _tokenHelper.cifrarMD5(model.Password);
+                    //model.Password = contraseña;
 
-                    Response responseValid = await _context.GetValidUser(new LoginRequest {Email = model.Email, Contraseña = contraseña});
-                    if (responseValid.Result == null)
-                        return BadRequest("Usuario o contraseña son incorrectos");
+                    //Response responseValid = await _context.GetValidUser(new LoginRequest {Email = model.Email, Contraseña = contraseña});
+                    //if (responseValid.Result == null)
+                    //    return BadRequest("Usuario o contraseña son incorrectos");
 
                     await _userHelper.UpdateUserAsync(model);
 
@@ -266,7 +269,9 @@ namespace TronchaToro.Service.Controllers
                 else
                 {
                     await _userHelper.CreateUserAsync(model);
-                    object token = _tokenHelper.CrearToken(users);
+                    Response userResponse2 = await _context.GetUser<UserModel>(model.Email);
+                    UserModel users2 = (UserModel)userResponse2.Result;
+                    object token = _tokenHelper.CrearToken(users2);
                     return Created(string.Empty, token);
                 }
             }
@@ -275,5 +280,49 @@ namespace TronchaToro.Service.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        protected string cifrarMD5(string password)
+        {
+            MD5CryptoServiceProvider encriptador = new MD5CryptoServiceProvider();
+            byte[] bs = Encoding.UTF8.GetBytes(password);
+            bs = encriptador.ComputeHash(bs);
+
+            string passHash = null;
+
+            foreach (byte b in bs)
+            {
+                passHash += b.ToString("x2").ToLower();
+            }
+
+            string clave_cifrada = passHash;
+            return clave_cifrada;
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("RegisterUser")]
+        public async Task<IActionResult> RegisterUsere(RegisterUserRequest model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                model.Password = cifrarMD5(model.Password);
+
+                await _userHelper.CreateUserAsync(model);
+                Response userResponse = await _context.GetUser<UserModel>(model.Email);
+                UserModel users = (UserModel)userResponse.Result;
+                object token = _tokenHelper.CrearToken(users);
+                return Created(string.Empty, token);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        
     }
 }

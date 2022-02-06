@@ -561,13 +561,13 @@ namespace TronchaToro.Service.Context
                 var response = await connection.ExecuteAsync(
                 storeProcedure, new {
                     request.Email,
-                    request.Password,
+                    Password = request.Password != null ? request.Password : "",
                     request.Rol_id,
                     request.Name,
-                    request.LastName,
-                    request.BirthDate,
-                    request.Address,
-                    request.PhoneNumber,
+                    LastName = request.LastName != null ? request.LastName : "",
+                    BirthDate = request.BirthDate.ToString() != new DateTime(1900,1,1).ToShortDateString() ? request.BirthDate : new DateTime(1900, 1, 1),
+                    Address = request.Address != null ? request.Address : "",
+                    PhoneNumber = request.PhoneNumber != null ? request.PhoneNumber : "",
                     request.imageId,
                     request.LoginType
                 },
@@ -608,7 +608,7 @@ namespace TronchaToro.Service.Context
                 storeProcedure, new {
                     request.Email,
                     request.Name,
-                    request.LastName,
+                    LastName = request.LastName != null ? request.LastName : "",
                     request.imageId
                 },
                 commandType: CommandType.StoredProcedure);

@@ -13,7 +13,7 @@ namespace TronchaToro.Service.Models
 		public int Rol_id { get; set; }
 		public string Name { get; set; }
 		public string LastName { get; set; }
-		public string BirthDate { get; set; }
+		public DateTime BirthDate { get; set; }
 		public string Address { get; set; }
 		public string PhoneNumber { get; set; }
         public string imageId { get; set; }
@@ -21,7 +21,9 @@ namespace TronchaToro.Service.Models
         public string ImageFullPath =>
             string.IsNullOrEmpty(imageId)
             ? $"https://troncha-toro.com/TT/ImgTronchaToro/users/no-image.png"
-            : $"https://troncha-toro.com/TT/ImgTronchaToro/users/{imageId}";
+            : LoginType != "1"
+                ? $"https://troncha-toro.com/TT/ImgTronchaToro/users/{imageId}"
+                : imageId;
 
         //public string ImageFullPath =>
         //    string.IsNullOrEmpty(SocialImageURL) && string.IsNullOrEmpty(imageId)
