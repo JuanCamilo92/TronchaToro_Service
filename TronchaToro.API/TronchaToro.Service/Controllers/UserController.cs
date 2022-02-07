@@ -323,6 +323,27 @@ namespace TronchaToro.Service.Controllers
             }
         }
 
-        
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("UpdateUser")]
+        public async Task<IActionResult> UpdateUser(RegisterUserRequest model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                await _userHelper.UpdateUserAsync(model);
+                Response userResponse = await _context.GetUser<UserModel>(model.Email);
+                UserModel users = (UserModel)userResponse.Result;
+                return Ok(users);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

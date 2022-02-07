@@ -26,8 +26,8 @@ namespace TronchaToro.Service.Helpers
         {
             try
             {
-                if (request.Image != null)
-                    await SaveImage(request.Image, "User", request.imageId);
+                if (!string.IsNullOrEmpty(request.imageId))
+                    await SaveImage(request.Image, "users", request.imageId);
                 await _context.RegisterUserUpdate(request);
             }
             catch (Exception)
@@ -40,7 +40,7 @@ namespace TronchaToro.Service.Helpers
         {
             try
             {
-                if (request.Image != null)
+                if (!string.IsNullOrEmpty(request.imageId))
                     await SaveImage(request.Image, "users", request.imageId);
                 Response response = await _context.RegisterUser(request);
             }
@@ -54,8 +54,6 @@ namespace TronchaToro.Service.Helpers
         {
             try
             {
-                //MemoryStream stream = new MemoryStream(file);
-                //Bitmap imagen = new Bitmap(stream);
                 if (!File.Exists(_env.ContentRootPath+$"/ImgTronchaToro/{container}/{nombre}"))
                     await File.WriteAllBytesAsync(_env.ContentRootPath + $"/ImgTronchaToro/{container}/{nombre}", file);
             }

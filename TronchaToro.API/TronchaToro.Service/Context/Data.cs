@@ -609,7 +609,10 @@ namespace TronchaToro.Service.Context
                     request.Email,
                     request.Name,
                     LastName = request.LastName != null ? request.LastName : "",
-                    request.imageId
+                    request.imageId,
+                    BirthDate = request.BirthDate.ToString() != new DateTime(1900, 1, 1).ToShortDateString() ? request.BirthDate : new DateTime(1900, 1, 1),
+                    Address = request.Address != null ? request.Address : "",
+                    PhoneNumber = request.PhoneNumber != null ? request.PhoneNumber : "",
                 },
                 commandType: CommandType.StoredProcedure);
 
